@@ -1,0 +1,17 @@
+# Byte-compiled files
+*.pyc
+*.pyo
+__pycache__/
+
+# folders
+/venv
+/database
+.idea
+
+# files
+yolov4.cfg
+yolov4.weights
+rejestracja.jpg
+rejestracja2.jpg
+rejestracja3.webp
+opis algorytmu kamery glownej.txt
