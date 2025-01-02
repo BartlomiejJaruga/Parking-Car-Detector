@@ -83,7 +83,7 @@ class FrameData:
         else:
             print("(empty)")
 
-    def lookup_close_position_in_dictionary(self, position: tuple, x_range: int = 40, y_range: int = 40) -> tuple[int, str]:
+    def lookup_close_position_in_dictionary(self, position: tuple, x_range: int = 50, y_range: int = 50) -> tuple[int, str]:
         """Searches for licence plate with close position to given position.
 
         :param position: tuple with x and y coordinates of licence plate to lookup in dictionary
@@ -101,7 +101,7 @@ class FrameData:
                 return 1, licence_plate
         return 0, "No match found - new car!"
 
-    def lookup_all_positions_in_dictionary(self, positions: tuple[tuple[int, int], ...], x_range: int = 40, y_range: int = 40) -> list[tuple]:
+    def lookup_all_positions_in_dictionary(self, positions: tuple[tuple[int, int], ...], x_range: int = 50, y_range: int = 50) -> list[tuple]:
         unknown_positions = []
         for position in positions:
             result, licence_plate = self.lookup_close_position_in_dictionary(position, x_range, y_range)
@@ -111,6 +111,14 @@ class FrameData:
                 unknown_positions.append(position)
 
         return unknown_positions
+
+    def get_all_licence_plates_and_their_positions(self) -> tuple[tuple, tuple]:
+        licence_plates = []
+        positions = []
+        for licence_plate, data in self.licence_plates_and_positions.items():
+            licence_plates.append(licence_plate)
+            positions.append(data[0])
+        return tuple(licence_plates), tuple(positions)
 
 
 if __name__ == "__main__":
@@ -151,3 +159,5 @@ if __name__ == "__main__":
     #
     # last_frame.remove_not_updated_licence_plates()
     # last_frame.print_all_licence_plates_and_positions()
+
+    print(last_frame.get_all_licence_plates_and_their_positions())

@@ -43,7 +43,7 @@ def drawAllLicencePlateNumbers(image: np.array, cars_licence_plates: list | tupl
         draw.rectangle(text_bbox, fill="blue")
         draw.text((x, y), licence_plate, fill="white", font=font)
 
-    return np.array(img)
+    return cv2.cvtColor(np.array(img), cv2.COLOR_RGB2BGR)
 
 
 def findCars(frame, show_steps=False, show_end_product=False):
@@ -128,7 +128,6 @@ if __name__ == "__main__":
     found_cars, car_pos = findCars(image)
     plates = ['EL 123456', 'EKU 111222', 'EZD 023023', 'PL 6969']
     image_with_licence_plates = drawAllLicencePlateNumbers(found_cars, plates, car_pos)
-    image_with_license_plates_BGR = cv2.cvtColor(image_with_licence_plates, cv2.COLOR_RGB2BGR)
-    cv2.imshow("cars", image_with_license_plates_BGR)
+    cv2.imshow("cars", image_with_licence_plates)
     cv2.waitKey(0)
     cv2.destroyAllWindows()

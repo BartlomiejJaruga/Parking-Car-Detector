@@ -45,7 +45,6 @@ if __name__ == "__main__":
 
     current_detected_cars = 0
     current_licence_plates = []
-    unknown_positions = []
     last_frame_data = FrameData()
 
     while True:
@@ -61,12 +60,43 @@ if __name__ == "__main__":
                 newest_licence_plate = generate_random_licence_plate()  # [!] w tej linijce pobrać rejestracje z bazy [!]
                 current_licence_plates.append(newest_licence_plate)
 
-            elif car_difference_between_frames < 0: # auto wyjechało z parkingu
-                pass
-            else: # brak zmian w ilości aut na parkingu
-                pass
+                unknown_positions = last_frame_data.lookup_all_positions_in_dictionary(new_frame_car_positions)
+                if unknown_positions:
+                    last_frame_data.add_licence_plate(newest_licence_plate, unknown_positions[0])
 
-            cv2.imshow("cars", new_frame_with_rectangles)
+                last_frame_data.detected_cars = current_detected_cars
+
+                licence_plates_to_draw, all_cars_positions = last_frame_data.get_all_licence_plates_and_their_positions()
+                image_with_licence_plates = drawAllLicencePlateNumbers(new_frame_with_rectangles, licence_plates_to_draw, all_cars_positions)
+
+                last_frame_data.set_all_licence_plate_update_flag(0)
+            elif car_difference_between_frames < 0: # auto wyjechało z parkingu
+                unknown_positions = last_frame_data.lookup_all_positions_in_dictionary(new_frame_car_positions)
+                if unknown_positions:
+                    print("[!] Wystąpiły nieznane pozycje! Nie powinno być nieznalezionych aut. [!]")
+
+                last_frame_data.remove_not_updated_licence_plates()
+
+                last_frame_data.detected_cars = current_detected_cars
+
+                licence_plates_to_draw, all_cars_positions = last_frame_data.get_all_licence_plates_and_their_positions()
+                image_with_licence_plates = drawAllLicencePlateNumbers(new_frame_with_rectangles, licence_plates_to_draw, all_cars_positions)
+
+                last_frame_data.set_all_licence_plate_update_flag(0)
+            else: # brak zmian w ilości aut na parkingu
+                unknown_positions = last_frame_data.lookup_all_positions_in_dictionary(new_frame_car_positions)
+                if unknown_positions:
+                    print("[!] Wystąpiły nieznane pozycje! Nie powinno być nieznalezionych aut. [!]")
+
+                last_frame_data.detected_cars = current_detected_cars
+
+                licence_plates_to_draw, all_cars_positions = last_frame_data.get_all_licence_plates_and_their_positions()
+                image_with_licence_plates = drawAllLicencePlateNumbers(new_frame_with_rectangles, licence_plates_to_draw, all_cars_positions)
+
+                last_frame_data.set_all_licence_plate_update_flag(0)
+
+            # ========== WYŚWIETLENIE PRZETWORZONEGO OBRAZU Z KAMERY ==========
+            cv2.imshow("cars", image_with_licence_plates)
         if cv2.waitKey(1) == 27: # ESC
             cv2.destroyAllWindows()
             break
