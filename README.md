@@ -27,7 +27,7 @@ It allows to show licence plates of all cars in the parking from the top view an
 <img src="public/screenshots/cars_detected_4.PNG"><br><br>
 
 ## Badly detected cars:
-Sometimes app doesn't detect everything as it should, the parking lot should well illuminated to detect cars perfectly.
+Sometimes app doesn't detect everything as it should, the parking lot should well illuminated to detect cars perfectly.<br><br>
 <img src="public/screenshots/cars_not_perfectly_detected.PNG"><br><br>
 <img src="public/screenshots/cars_not_perfectly_detected2.PNG"><br><br>
 
