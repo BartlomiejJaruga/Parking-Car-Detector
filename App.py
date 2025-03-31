@@ -35,8 +35,6 @@ def generate_random_licence_plate():
 if __name__ == "__main__":
     device = 0
     cap = cv2.VideoCapture(device)
-    # cap.set(cv2.CAP_PROP_FRAME_WIDTH, 600)
-    # cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 600)
 
     while not cap.isOpened():
         cap = cv2.VideoCapture(device)

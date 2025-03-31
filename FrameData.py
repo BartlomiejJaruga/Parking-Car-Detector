@@ -97,7 +97,6 @@ class FrameData:
         for licence_plate, data in self.licence_plates_and_positions.items():
             old_x, old_y = data[0]
             if (old_x - x_range <= new_x <= old_x + x_range) and (old_y - y_range <= new_y <= old_y + y_range):
-                # print(str(position) + " is inside of box of " + str(data[0]))
                 return 1, licence_plate
         return 0, "No match found - new car!"
 
@@ -124,23 +123,10 @@ class FrameData:
 if __name__ == "__main__":
     last_frame = FrameData()
 
-    # print(last_frame.detected_cars)
-    # last_frame.increment_detected_cars()
-    # print(last_frame.detected_cars)
-    # last_frame.decrement_detected_cars()
-    # print(last_frame.detected_cars)
-    # last_frame.increment_detected_cars(2)
-    # print(last_frame.detected_cars)
-    # last_frame.decrement_detected_cars(3)
-    # print(last_frame.detected_cars)
-
     last_frame.add_licence_plate("PL 6969", (0, 300))
     last_frame.add_licence_plate("EKU 123123", (120, 100))
     last_frame.add_licence_plate("OK CATCH", (111, 555))
     last_frame.print_all_licence_plates_and_positions()
-
-    # last_frame.add_licence_plate("EL 000000", (666, 666))
-    # last_frame.print_all_licence_plates_and_positions()
 
     last_frame.set_all_licence_plate_update_flag(0)
     last_frame.print_all_licence_plates_and_positions()
@@ -150,14 +136,5 @@ if __name__ == "__main__":
     last_frame.print_all_licence_plates_and_positions()
     if len(unknown_positions):
         print(unknown_positions)
-
-    # last_frame.remove_licence_plate("OK CATCH")
-    # last_frame.print_all_licence_plates_and_positions()
-    #
-    # last_frame.set_all_licence_plate_update_flag(0)
-    # last_frame.print_all_licence_plates_and_positions()
-    #
-    # last_frame.remove_not_updated_licence_plates()
-    # last_frame.print_all_licence_plates_and_positions()
 
     print(last_frame.get_all_licence_plates_and_their_positions())

@@ -1,11 +1,8 @@
 import numpy as np
 import matplotlib.pyplot as plt
-from skimage import io, color, filters, feature, morphology, measure
-from skimage.morphology import erosion, reconstruction, disk, square, dilation
-from skimage.transform import rescale, resize
+from skimage import morphology, measure
+from skimage.morphology import disk, dilation
 import cv2
-import time
-import pandas as pd
 from PIL import Image, ImageDraw, ImageFont
 
 
@@ -36,7 +33,7 @@ def drawAllLicencePlateNumbers(image: np.array, cars_licence_plates: list | tupl
         font = ImageFont.load_default()
 
     for idx, licence_plate in enumerate(cars_licence_plates):
-        if idx > len(cars_rectangles_positions):
+        if idx >= len(cars_rectangles_positions):
             break
         x, y = cars_rectangles_positions[idx]
         text_bbox = draw.textbbox((x, y), licence_plate, font=font)
@@ -60,28 +57,14 @@ def findCars(frame, show_steps=False, show_end_product=False):
         axes[1].set_title("hsv from BGR")
         plt.show()
 
-    # ======================= MASKOWANIE AUTEK I WYSWIETLANIE TYLKO ICH NA OBRAZIE =============================
-
-    # sampled_hsv_values = hsv_image[310:320, 590:600].reshape(-1, 3)
-    # with pd.option_context('display.max_rows', None, 'display.max_columns', None):
-    #     print(pd.DataFrame(sampled_hsv_values, columns=["H", "S", "V"]))
-
-    # thresholdy dla linii
-    # lower_threshold = np.array([20, 10, 200])
-    # upper_threshold = np.array([26, 50, 255])
+    # ======================= MASKOWANIE SAMOCHODÓW I WYŚWIETLANIE TYLKO ICH NA OBRAZIE =============================
 
     # thresholdy dla autek (minimalne wartości: [..., 74-75, 74-75])
     lower_threshold = np.array([0, 74, 74])  # węższe prostokąty dla +-85
     upper_threshold = np.array([179, 255, 255])
 
-    # print(str(lower_threshold) + " " + str(upper_threshold))
-    # print(str(convert_opencv_to_hsv(0, 85, 85)) + " " + str(convert_opencv_to_hsv(179, 255, 255)))
-
     mask = cv2.inRange(hsv_image, lower_threshold, upper_threshold)
     mask = dilation(mask, disk(4))  # większe wartości (powyżej 10 może łączyć auta) dają większe prostokąty
-
-    # counter = np.count_nonzero(mask)
-    # print(counter)
 
     result = cv2.bitwise_and(resized_image, resized_image, mask=mask)
 
@@ -124,10 +107,18 @@ def findCars(frame, show_steps=False, show_end_product=False):
 
 
 if __name__ == "__main__":
-    image = cv2.imread("parking.jpg")
-    found_cars, car_pos = findCars(image)
-    plates = ['EL 123456', 'EKU 111222', 'EZD 023023', 'PL 6969']
-    image_with_licence_plates = drawAllLicencePlateNumbers(found_cars, plates, car_pos)
-    cv2.imshow("cars", image_with_licence_plates)
-    cv2.waitKey(0)
-    cv2.destroyAllWindows()
+    images_names = ["parking.jpg",
+                    "parking2.jpg",
+                    "parking3.jpg",
+                    "parking4.jpg",
+                    "parking5.jpg",
+                    "parking6.jpg"]
+
+    for image_name in images_names:
+        image = cv2.imread(image_name)
+        found_cars, car_pos = findCars(image)
+        plates = ['EL 123456', 'EKU 111222', 'EZD 023023', 'PL 6969']
+        image_with_licence_plates = drawAllLicencePlateNumbers(found_cars, plates, car_pos)
+        cv2.imshow("cars", image_with_licence_plates)
+        cv2.waitKey(0)
+        cv2.destroyAllWindows()
